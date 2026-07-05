@@ -6,7 +6,6 @@ from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, CallbackQu
 from aiogram.enums import ParseMode
 from aiogram.client.default import DefaultBotProperties
 from aiogram.client.session.aiohttp import AiohttpSession
-from aiohttp_socks import ProxyConnector
 
 # Настройка логирования
 logging.basicConfig(level=logging.INFO)
@@ -14,10 +13,8 @@ logging.basicConfig(level=logging.INFO)
 # ========== НАСТРОЙКИ ==========
 BOT_TOKEN = "8507342702:AAF6mFeR25bxxUUS1qYbzF3H3G_7cp8UP_0"
 
-PROXY_HOST = "45.86.163.132"
-PROXY_PORT = "16216"
-PROXY_LOGIN = "modeler_QAv4mN"
-PROXY_PASSWORD = "kPWXfPcIVHSs"
+# HTTP прокси (НЕ SOCKS5!)
+PROXY_URL = "http://modeler_QAv4mN:kPWXfPcIVHSs@45.86.163.132:16216"
 
 CHANNEL_ID = "-1003545128797"
 CHANNEL_LINK = "https://t.me/+jsNubEq-f7U2ZjE0"
@@ -127,24 +124,17 @@ async def check_subscription_callback(callback: CallbackQuery):
 async def main():
     global bot
     
-    # Правильный способ для aiogram 3.x
-    proxy_url = f"socks5://{PROXY_LOGIN}:{PROXY_PASSWORD}@{PROXY_HOST}:{PROXY_PORT}"
+    # Для HTTP прокси используем proxy параметр
+    session = AiohttpSession(proxy=PROXY_URL)
     
-    # Создаем connector
-    connector = ProxyConnector.from_url(proxy_url)
-    
-    # Создаем сессию с правильным параметром
-    session = AiohttpSession(proxy=proxy_url)
-    
-    # Создаем бота
     bot = Bot(
         token=BOT_TOKEN,
         session=session,
         default=DefaultBotProperties(parse_mode=ParseMode.HTML)
     )
     
-    print("🚀 Бот запущен через прокси!")
-    print(f"📡 Прокси: {PROXY_HOST}:{PROXY_PORT}")
+    print("🚀 Бот запущен через HTTP прокси!")
+    print(f"📡 Прокси: {PROXY_URL}")
     
     await dp.start_polling(bot)
 
