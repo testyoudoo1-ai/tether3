@@ -5,7 +5,7 @@ from aiogram.filters import Command
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
 from aiogram.enums import ParseMode
 from aiogram.client.default import DefaultBotProperties
-from aiohttp import ClientSession
+from aiogram.client.session.aiohttp import AiohttpSession
 from aiohttp_socks import ProxyConnector
 
 # Настройка логирования
@@ -127,14 +127,16 @@ async def check_subscription_callback(callback: CallbackQuery):
 async def main():
     global bot
     
-    # Правильный способ создать сессию с прокси для aiogram 3.x
+    # Правильный способ для aiogram 3.x
     proxy_url = f"socks5://{PROXY_LOGIN}:{PROXY_PASSWORD}@{PROXY_HOST}:{PROXY_PORT}"
     
-    # Создаем connector и сессию
+    # Создаем connector
     connector = ProxyConnector.from_url(proxy_url)
-    session = ClientSession(connector=connector)
     
-    # Создаем бота с сессией
+    # Создаем сессию с правильным параметром
+    session = AiohttpSession(proxy=proxy_url)
+    
+    # Создаем бота
     bot = Bot(
         token=BOT_TOKEN,
         session=session,
