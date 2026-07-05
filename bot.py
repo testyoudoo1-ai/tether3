@@ -11,9 +11,9 @@ from aiogram.client.session.aiohttp import AiohttpSession
 logging.basicConfig(level=logging.INFO)
 
 # ========== НАСТРОЙКИ ==========
-BOT_TOKEN = "8507342702:AAF6mFeR25bxxUUS1qYbzF3H3G_7cp8UP_0"
+BOT_TOKEN = "8939445281:AAHvlZYYGID9XGUrc4yM9jCjbTLK_UX4U1w"
 
-# HTTP прокси (НЕ SOCKS5!)
+# HTTP прокси
 PROXY_URL = "http://modeler_QAv4mN:kPWXfPcIVHSs@45.86.163.132:16216"
 
 CHANNEL_ID = "-1003545128797"
@@ -124,7 +124,7 @@ async def check_subscription_callback(callback: CallbackQuery):
 async def main():
     global bot
     
-    # Для HTTP прокси используем proxy параметр
+    # Для HTTP прокси
     session = AiohttpSession(proxy=PROXY_URL)
     
     bot = Bot(
