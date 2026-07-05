@@ -9,13 +9,15 @@ from aiogram.client.session.aiohttp import AiohttpSession
 
 logging.basicConfig(level=logging.INFO)
 
-BOT_TOKEN = "8939445281:AAHvlZYYGID9XGUrc4yM9jCjbTLK_UX4U1w"
+# ========== НОВЫЙ ТОКЕН ==========
+BOT_TOKEN = "8507342702:AAF6mFeR25bxXUUS1qYbzF3H3G_7cp8UP_0"
 
 # Твой HTTP прокси
 PROXY_URL = "http://modeler_QAv4mN:kPWXfPcIVHSs@45.86.163.132:16216"
 
 CHANNEL_ID = "-1003545128797"
 CHANNEL_LINK = "https://t.me/+jsNubEq-f7U2ZjE0"
+# ================================
 
 dp = Dispatcher()
 
@@ -37,7 +39,10 @@ async def start_command(message: types.Message):
     else:
         keyboard = InlineKeyboardMarkup(
             inline_keyboard=[
-                [InlineKeyboardButton(text="📢 Получить доступ", callback_data="get_access")]
+                [InlineKeyboardButton(
+                    text="📢 Получить доступ",
+                    callback_data="get_access"
+                )]
             ]
         )
         await message.answer(
@@ -53,8 +58,14 @@ async def start_command(message: types.Message):
 async def get_access_callback(callback: CallbackQuery):
     keyboard = InlineKeyboardMarkup(
         inline_keyboard=[
-            [InlineKeyboardButton(text="📢 Подать заявку в канал", url=CHANNEL_LINK)],
-            [InlineKeyboardButton(text="✅ Проверить подписку", callback_data="check_subscription")]
+            [InlineKeyboardButton(
+                text="📢 Подать заявку в канал",
+                url=CHANNEL_LINK
+            )],
+            [InlineKeyboardButton(
+                text="✅ Проверить подписку",
+                callback_data="check_subscription"
+            )]
         ]
     )
     await callback.message.edit_text(
@@ -86,24 +97,41 @@ async def check_subscription_callback(callback: CallbackQuery):
         else:
             keyboard = InlineKeyboardMarkup(
                 inline_keyboard=[
-                    [InlineKeyboardButton(text="📢 Подать заявку в канал", url=CHANNEL_LINK)],
-                    [InlineKeyboardButton(text="🔄 Проверить еще раз", callback_data="check_subscription")]
+                    [InlineKeyboardButton(
+                        text="📢 Подать заявку в канал",
+                        url=CHANNEL_LINK
+                    )],
+                    [InlineKeyboardButton(
+                        text="🔄 Проверить еще раз",
+                        callback_data="check_subscription"
+                    )]
                 ]
             )
             await callback.message.edit_reply_markup(reply_markup=keyboard)
-            await callback.answer("❌ Вы ещё не вступили в канал!", show_alert=True)
+            await callback.answer(
+                "❌ Вы ещё не подали заявку или не вступили в канал!",
+                show_alert=True
+            )
     except Exception as e:
-        logging.error(f"Ошибка: {e}")
-        await callback.answer("❌ Произошла ошибка.", show_alert=True)
+        logging.error(f"Ошибка при проверке подписки: {e}")
+        await callback.answer(
+            "❌ Произошла ошибка. Попробуйте позже.",
+            show_alert=True
+        )
 
 
 async def main():
     global bot
-    # Правильная сессия для HTTP прокси
     session = AiohttpSession(proxy=PROXY_URL)
-    bot = Bot(token=BOT_TOKEN, session=session, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
-
+    bot = Bot(
+        token=BOT_TOKEN,
+        session=session,
+        default=DefaultBotProperties(parse_mode=ParseMode.HTML)
+    )
+    
     print("🚀 Бот запущен через HTTP прокси!")
+    print(f"📡 Прокси: {PROXY_URL}")
+    
     await dp.start_polling(bot)
 
 
