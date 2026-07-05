@@ -5,16 +5,12 @@ from aiogram.filters import Command
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
 from aiogram.enums import ParseMode
 from aiogram.client.default import DefaultBotProperties
-from aiogram.client.session.aiohttp import AiohttpSession
 
 # Настройка логирования
 logging.basicConfig(level=logging.INFO)
 
 # ========== НАСТРОЙКИ ==========
 BOT_TOKEN = "8939445281:AAHvlZYYGID9XGUrc4yM9jCjbTLK_UX4U1w"
-
-# HTTP прокси
-PROXY_URL = "http://modeler_QAv4mN:kPWXfPcIVHSs@45.86.163.132:16216"
 
 CHANNEL_ID = "-1003545128797"
 CHANNEL_LINK = "https://t.me/+jsNubEq-f7U2ZjE0"
@@ -124,17 +120,13 @@ async def check_subscription_callback(callback: CallbackQuery):
 async def main():
     global bot
     
-    # Для HTTP прокси
-    session = AiohttpSession(proxy=PROXY_URL)
-    
+    # БЕЗ ПРОКСИ!
     bot = Bot(
         token=BOT_TOKEN,
-        session=session,
         default=DefaultBotProperties(parse_mode=ParseMode.HTML)
     )
     
-    print("🚀 Бот запущен через HTTP прокси!")
-    print(f"📡 Прокси: {PROXY_URL}")
+    print("🚀 Бот запущен БЕЗ прокси!")
     
     await dp.start_polling(bot)
 
